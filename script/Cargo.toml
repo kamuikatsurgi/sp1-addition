@@ -1,0 +1,15 @@
+[package]
+version = "0.1.0"
+name = "addition-script"
+edition = "2021"
+default-run = "addition"
+
+[[bin]]
+name = "addition"
+path = "src/main.rs"
+
+[dependencies]
+sp1-sdk = "3.0.0"
+
+[build-dependencies]
+sp1-helper = "3.0.0"
