@@ -24,7 +24,7 @@ To run the program without generating a proof:
 
 ```sh
 cd script
-cargo run --release -- --execute
+cargo run --release -- --execute a b c
 ```
 
 This will execute the program and display the output.

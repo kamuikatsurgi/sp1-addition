@@ -3,15 +3,16 @@
 //!
 //! You can run this script using the following command:
 //! ```shell
-//! RUST_LOG=info cargo run --release -- --execute
+//! RUST_LOG=info cargo run --release -- --execute a b c
 //! ```
 //! or
 //! ```shell
-//! RUST_LOG=info cargo run --release -- --prove
+//! RUST_LOG=info cargo run --release -- --prove a b c
 //! ```
 
 //! A program that takes a number `a`, `b`, and `c` as inputs, and writes if `c` is a valid sum of `a` and `b`.
 use sp1_sdk::{include_elf, utils, ProverClient, SP1ProofWithPublicValues, SP1Stdin};
+use std::env::args;
 
 const ELF: &[u8] = include_elf!("addition-program");
 
@@ -21,14 +22,14 @@ fn main() {
 
     let mut stdin = SP1Stdin::new();
 
-    // Create an input stream.
-    let a = 10u32;
-    let b = 20u32;
-    let c = 30u32;
+    let inputs: Vec<u32> = args()
+        .skip(2)
+        .map(|arg| arg.parse::<u32>().expect("Failed to parse input as u32"))
+        .collect();
 
-    stdin.write(&a);
-    stdin.write(&b);
-    stdin.write(&c);
+    stdin.write(&inputs[0]);
+    stdin.write(&inputs[1]);
+    stdin.write(&inputs[2]);
 
     // Generate and verify the proof.
     let client = ProverClient::new();
@@ -44,6 +45,7 @@ fn main() {
     proof
         .save("proof-addition.bin")
         .expect("saving proof failed");
+
     let deserialized_proof =
         SP1ProofWithPublicValues::load("proof-addition.bin").expect("loading proof failed");
 
